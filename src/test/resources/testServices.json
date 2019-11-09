@@ -1,0 +1,40 @@
+{
+	"services":[
+		{
+			"app":"after-server",
+			"env":"prod",
+			"uri":"http://xpd.dok.intra.renault.fr/ping",
+			"frequencyMinutes":2,
+			"alerters": [{
+				"name":"mail"
+			}],
+			"tester": {
+				"name":"tester"
+			}
+		},
+		{
+			"app":"rpd-ws",
+			"env":"prod",
+			"uri":"http://sicgope01.mc2.renault.fr:15080/v1/ping",
+			"frequencyMinutes":1,
+			"alerters": [{
+				"name":"mail"
+			}],
+			"tester": {
+				"name":"tester"
+			}
+		},
+		{
+			"app":"rpd-ws",
+			"env":"prod",
+			"uri":"http://sicgope01.mc2.renault.fr:17080/ping",
+			"frequencyMinutes":3,
+			"alerters": [{
+				"name":"mail"
+			}],
+			"tester": {
+				"name":"tester"
+			}
+		}
+	]
+}

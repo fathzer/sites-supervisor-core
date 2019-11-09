@@ -1,0 +1,23 @@
+{
+	"database":{
+		"class":"com.fathzer.checkmysites.db.Influx"
+	},
+	"alerters":{
+		"mail" : {
+			"class":"com.fathzer.checkmysites.alerter.EMailAlerter",
+			"parameters":{
+				"host":"smtp",
+				"from":"noreply-supervisor@renault.com"
+			}
+		}
+	},
+	"testers": {
+		"http200" :	{
+			"class":"com.fathzer.checkmysites.tester.BasicHttpTester",
+			"parameters":{
+				"proxy":"myproxy.example.com:3128",
+				"noProxy":".example.com"
+			}
+		}
+	}
+}
