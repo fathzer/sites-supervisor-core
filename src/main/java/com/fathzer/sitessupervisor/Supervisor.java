@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Supervisor {
 	// WARNING: This variable is not final for the tests to be able to hack it
-	private static long MIN_TO_MS = 60*1000;
+	private static long MIN_TO_MS = 60*1000L;
 	
 	@Getter
 	@Setter
@@ -142,7 +142,8 @@ public class Supervisor {
 				workers.awaitTermination(60, TimeUnit.SECONDS);
 				log.info("Supervisors threads are closed");
 			} catch (InterruptedException e) {
-				log.info("Unable to close supervisors threads in 60s");
+				log.info("Unable to close supervisors threads in 60s",e);
+				Thread.currentThread().interrupt();
 			}
 			scheduler = null;
 		}

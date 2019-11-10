@@ -61,7 +61,7 @@ public class BasicHttpTester extends Tester<BasicHttpTester.ServiceParams> {
 			} catch (ClassCastException e) {
 				throw new IllegalArgumentException(String.format(NOT_STRING_ERR, params.get(PROXY_ATTRIBUTE)));
 			} catch (StringIndexOutOfBoundsException e) {
-				throw new IllegalArgumentException(String.format("%s attribute (%s) does not comply with expected format (host:port)", params.get(PROXY_ATTRIBUTE)));
+				throw new IllegalArgumentException(String.format("%s attribute (%s) does not comply with expected format (host:port)", PROXY_ATTRIBUTE, params.get(PROXY_ATTRIBUTE)));
 			}
 			if (params.containsKey(NO_PROXY_ATTRIBUTE)) {
 				try {
@@ -100,7 +100,7 @@ public class BasicHttpTester extends Tester<BasicHttpTester.ServiceParams> {
 					}
 				}
 			};
-			TIME_OUT_MANAGER.schedule(task, timeOutSeconds * 1000);
+			TIME_OUT_MANAGER.schedule(task, timeOutSeconds * 1000L);
 			try {
 				HttpResponse response = client.execute(req);
 				task.cancel();

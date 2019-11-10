@@ -21,7 +21,7 @@ public abstract class Alerter<T> {
 	/** Verifies the parameters declared in a service.
 	 * @param serviceParameters The service's parameters. For instance, for an email alerter, the list of email recipients.
 	 * @return An object that represents the serviceParameter in a ready to use representation (for instance, for an email alerter, the email addresses ready to by used by javax.mail package).
-	 * The returned object will be passed to the {@link #alert(com.fathzer.sitessupervisor.Configuration.Service, Object, String)} method.
+	 * The returned object will be passed to the {@link #alert(ServiceInfo, Object, String)} method.
 	 */
 	public abstract T verify(Map<String, Object> serviceParameters);
 

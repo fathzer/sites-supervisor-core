@@ -18,7 +18,7 @@ public abstract class Tester<T> {
 	/** Verifies the parameters declared in a service.
 	 * @param serviceParameters The service's parameters. For instance, for an http tester, a http header list.
 	 * @return An object that represents the serviceParameter in a ready to use representation.
-	 * The returned object will be passed to the {@link #check(com.fathzer.checkmysites.Configuration.Service, Object, String)} method.
+	 * The returned object will be passed to the {@link #check(URI, int, Object)} method.
 	 */
 	public abstract T verify(Map<String, Object> serviceParameters);
 

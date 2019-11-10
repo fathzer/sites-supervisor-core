@@ -111,6 +111,7 @@ public class SupervisorCommand extends AbstractSupervisorCommand<WatchService> {
 			}
 		} catch (InterruptedException e) {
 			log.error("Listener on services file was interrupted",e);
+			Thread.currentThread().interrupt();
 		} catch (ClosedWatchServiceException e) {
 			log.info("Listener on services file is stopped with exception");
 		}
