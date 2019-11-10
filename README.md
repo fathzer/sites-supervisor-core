@@ -11,11 +11,11 @@ Basically, an application supervisor is composed of 4 kinds of components:
 
 This library includes the following implementation of these concepts:
 * **Testers**:
-** An http tester that query a URI and tests the status code is 200. It supports adding headers (for example to provide an api key), and proxy.
+  ** An http tester that query a URI and tests the status code is 200. It supports adding headers (for example to provide an api key), and proxy.
 * **Alerters**:
-** An email alerter that connects to an smtp server to send mails.
+  ** An email alerter that connects to an smtp server to send mails.
 * **Database**:
-** Connector to [InfluxDB](https://www.influxdata.com/)
+  ** Connector to [InfluxDB](https://www.influxdata.com/)
 
 
 
