@@ -137,8 +137,9 @@ public class EMailAlerter extends Alerter<EMailAlerter.ServiceParams> {
 
 	@Override
 	public void alert(ServiceInfo info, ServiceParams config, String cause) {
-		log.info(String.format("%s state has changed to %s", info.getUri(), (cause==null?"ok":"ko"), cause));
+		log.info(String.format("%s state has changed to %s", info.getUri(), (cause==null?"ok":"ko")));
 		Session session = Session.getDefaultInstance(internal.props, new javax.mail.Authenticator() {
+			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
 				return new PasswordAuthentication(internal.user, internal.password);
 			}

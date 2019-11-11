@@ -83,12 +83,11 @@ public class Influx extends DB {
 
 	private boolean databaseExists() {
 		QueryResult result = this.db.query(new Query("SHOW DATABASES"));
-		// {"results":[{"series":[{"name":"databases","columns":["name"],"values":[["mydb"]]}]}]}
-		// Series [name=databases, columns=[name], values=[[mydb], [unittest_1433605300968]]]
+		// Result is something like that : {"results":[{"series":[{"name":"databases","columns":["name"],"values":[["mydb"]]}]}]}
 		List<List<Object>> databaseNames = result.getResults().get(0).getSeries().get(0).getValues();
 		if (databaseNames != null) {
-		  for (List<Object> db : databaseNames) {
-		    String name = db.get(0).toString();
+		  for (List<Object> names : databaseNames) {
+		    String name = names.get(0).toString();
 		    if (name.equals(settings.getDatabase())) {
 					log.info("Database {} found", name);
 		    	return true;
@@ -170,9 +169,7 @@ public class Influx extends DB {
 			log.info("No record found with url {} from {}",uri, tableName);
 			return false;
 		} else {
-			System.out.println(queryResult);
 			final List<Object> results = queryResult.get(0).getValues().stream().map(v->v.get(0)).collect(Collectors.toList());
-			System.out.println(results);
 			for (Object time : results) {
 				q = QueryBuilder.newQuery("DELETE FROM "+tableName+" WHERE time = $time")
 						.bind("time", time).create();

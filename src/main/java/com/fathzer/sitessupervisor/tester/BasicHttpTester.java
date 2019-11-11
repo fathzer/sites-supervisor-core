@@ -54,8 +54,8 @@ public class BasicHttpTester extends Tester<BasicHttpTester.ServiceParams> {
 		if (params!=null && params.containsKey(PROXY_ATTRIBUTE)) {
 			try {
 				String addressString = (String)params.get(PROXY_ATTRIBUTE);
-				final InetSocketAddress address = new InetSocketAddress(addressString.substring(0, addressString.lastIndexOf(":")),
-					  Integer.parseInt(addressString.substring(addressString.lastIndexOf(":")+1)));
+				final InetSocketAddress address = new InetSocketAddress(addressString.substring(0, addressString.lastIndexOf(':')),
+					  Integer.parseInt(addressString.substring(addressString.lastIndexOf(':')+1)));
 				// Will throw IllegalArgumentException if address is unresolved ... this is what we want :-)
 				this.parameters.proxy = new DefaultProxyRoutePlanner(new HttpHost(address.getAddress()));
 			} catch (ClassCastException e) {
