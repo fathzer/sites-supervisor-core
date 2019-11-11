@@ -100,7 +100,8 @@ The important things to understand are:
   * **app** and **env** and are tags that identifies the application and its environment (production, acceptance, ...).
   * frequencyMinutes sets the test frequency. Default value is 5 minutes.
   * timeOutSeconds is the maximum time allowed to the test to reply. If no reply is obtained in the specified time, service is considered down. Default value is 30s.
-* All the components have a parameters attribute that contains the configuration of the component for the service. The exact content of this attribute (and its obligatory presence) depends on the component (see component documentation).
+* A service should have a *tester* attribute and can have no *alerters*. Alerters and tester and identified by the name declared in [**global configuration**](#globalconfiguration).
+* All the components have a *parameters* attribute that contains the configuration of the component for the service. The exact content of this attribute (and its obligatory presence) depends on the component (see component documentation).
 
 ## Components documentation
 ### com.fathzer.sitessupervisor.db.Influx
@@ -109,6 +110,10 @@ The important things to understand are:
 
 ### com.fathzer.sitessupervisor.tester.BasicHttpTester
 
+## com.fathzer.sitessupervisor.SupervisorCommand
+
+## Writing your own testers or alerters
+
 ## Logging
-Logging is 
+This package uses [slf4j facade](http://www.slf4j.org/) for logging. You are free to use the implementation you want, for instance [logback classic](http://logback.qos.ch/). 
 

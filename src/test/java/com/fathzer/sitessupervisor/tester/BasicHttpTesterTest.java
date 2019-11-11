@@ -51,8 +51,8 @@ public class BasicHttpTesterTest {
 		assertNotNull(p.getHeaders());
 		assertEquals(1,p.getHeaders().size());
 		assertEquals("toto", p.getHeaders().get("apikey"));
-		assertFalse(tester.isProxyRequired(URI.create("http://www.example2.com"), p));
-		assertTrue(tester.isProxyRequired(URI.create("http://www.example.com"), p));
+		assertFalse(tester.isProxyRequired(URI.create("http://www.example.com"), p));
+		assertTrue(tester.isProxyRequired(URI.create("http://www.example2.com"), p));
 		
 		params.put("useProxy", true);
 		assertTrue(tester.isProxyRequired(URI.create("http://www.example2.com"), tester.verify(params)));
