@@ -1,0 +1,26 @@
+{
+	"services":[
+		{
+			"app":"my-app",
+			"env":"prod",
+			"uri":"https://myapp.example.com/ping",
+			"tester": {
+				"name":"http200",
+				"parameters": {
+					"headers": {
+						"apikey":"My cool api key"
+					},
+			  		"useProxy":true
+				}
+			},
+			"alerters":[
+				{
+					"name":"mail",
+					"parameters":{
+						"to": ["myappadm@example.com"]
+					}
+				}
+			]
+		}
+	]
+}
