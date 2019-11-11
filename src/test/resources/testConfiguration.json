@@ -1,0 +1,15 @@
+{
+	"database":{
+		"class":"com.fathzer.sitessupervisor.db.FakeDB"
+	},
+	"alerters":{
+		"mail" :{
+			"class":"com.fathzer.sitessupervisor.alerter.FakeAlerter"
+		}
+	},
+	"testers":{
+		"tester": {
+			"class":"com.fathzer.sitessupervisor.tester.FakeTester"
+		}
+	}
+}

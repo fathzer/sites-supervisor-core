@@ -1,0 +1,23 @@
+{
+	"database":{
+		"class":"com.fathzer.sitessupervisor.db.Influx"
+	},
+	"alerters":{
+		"mail" : {
+			"class":"com.fathzer.sitessupervisor.alerter.EMailAlerter",
+			"parameters":{
+				"host":"smtp",
+				"from":"noreply-supervisor@example.com"
+			}
+		}
+	},
+	"testers": {
+		"http200" :	{
+			"class":"com.fathzer.sitessupervisor.tester.BasicHttpTester",
+			"parameters":{
+				"proxy":"myproxy.example.com:3128",
+				"noProxy":".example.com"
+			}
+		}
+	}
+}
