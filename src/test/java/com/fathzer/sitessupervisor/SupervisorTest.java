@@ -15,7 +15,7 @@ import com.fathzer.sitessupervisor.Configuration;
 import com.fathzer.sitessupervisor.Supervisor;
 import com.fathzer.sitessupervisor.Configuration.Service;
 
-public class CheckMySitesTest {
+public class SupervisorTest {
 
 	@Test
 	public void test() throws IOException, InterruptedException {

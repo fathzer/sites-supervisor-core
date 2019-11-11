@@ -12,7 +12,15 @@
 					},
 			  		"useProxy":true
 				}
-			}
+			},
+			"alerters":[
+				{
+					"name":"mail",
+					"parameters":{
+						"to": ["myappadm@example.com"]
+					}
+				}
+			]
 		}
 	]
 }

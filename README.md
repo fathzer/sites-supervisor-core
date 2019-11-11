@@ -11,11 +11,11 @@ Basically, an application supervisor is composed of 4 kinds of components:
 
 This library includes the following implementation of these concepts:
 * **Testers**:
-  * **[com.fathzer.sitessupervisor.tester.BasicHttpTester](#com.fathzer.sitessupervisor.tester.BasicHttpTester)**: An http tester that query a URI and tests the status code is 200. It supports adding headers (for example to provide an api key), and proxy.
+  * **[com.fathzer.sitessupervisor.tester.BasicHttpTester](#comfathzersitessupervisortesterbasichttptester)**: An http tester that query a URI and tests the status code is 200. It supports adding headers (for example to provide an api key), and proxy.
 * **Alerters**:
-  * **[com.fathzer.sitessupervisor.alerter.EMailAlerter](#com.fathzer.sitessupervisor.alerter.EMailAlerter)**: An email alerter that connects to an smtp server to send mails.
+  * **[com.fathzer.sitessupervisor.alerter.EMailAlerter](#comfathzersitessupervisoralerteremailalerter)**: An email alerter that connects to an smtp server to send mails.
 * **Database**:
-  * **[com.fathzer.sitessupervisor.db.Influx](#com.fathzer.sitessupervisor.alerter.EMailAlerter)**: A connector to [InfluxDB](https://www.influxdata.com/).
+  * **[com.fathzer.sitessupervisor.db.Influx](#comfathzersitessupervisoralerteremailalerter)**: A connector to [InfluxDB](https://www.influxdata.com/).
 * **Supervisor**:
   * **com.fathzer.sitessupervisor.Supervisor**: A supervisor that manages the full life cycle of the supervision.
   
@@ -63,7 +63,44 @@ The important things to understand are:
 * alerters and testers have unique names (here *mail* and *http200*) that will be used to identified them in supervised application configuration configuration file.
 
 ### Supervised application configuration
-WORK IN PROGRESS
+Here is a configuration example:
+```json
+{
+	"services":[
+		{
+			"uri":"https://myapp.example.com/ping",
+			"app":"my-app",
+			"env":"prod",
+			"frequencyMinutes":10,
+			"timeOutSeconds":60,
+			"tester": {
+				"name":"http200",
+				"parameters": {
+					"headers": {
+						"apikey":"My cool api key"
+					},
+			  		"useProxy":true
+				}
+			},
+			"alerters":[
+				{
+					"name":"mail",
+					"parameters":{
+						"to": ["myappadm@example.com"]
+					}
+				}
+			]
+		}
+	]
+}
+```
+The important things to understand are:
+* Services (application) are identified by their URL. Two services can't share the same URL.
+* **app**, **env**, **frequencyMinutes** and **timeOutSeconds** attributes are optional.
+  * **app** and **env** and are tags that identifies the application and its environment (production, acceptance, ...).
+  * frequencyMinutes sets the test frequency. Default value is 5 minutes.
+  * timeOutSeconds is the maximum time allowed to the test to reply. If no reply is obtained in the specified time, service is considered down. Default value is 30s.
+* All the components have a parameters attribute that contains the configuration of the component for the service. The exact content of this attribute (and its obligatory presence) depends on the component (see component documentation).
 
 ## Components documentation
 ### com.fathzer.sitessupervisor.db.Influx
