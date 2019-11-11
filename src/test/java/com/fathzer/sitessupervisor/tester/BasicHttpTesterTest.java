@@ -40,7 +40,7 @@ public class BasicHttpTesterTest {
 	public void test() {
 		final Map<String, Object> map = new HashMap<>();
 		map.put("proxy", "127.0.0.1:3218");
-		map.put("noProxy",".renault.fr");
+		map.put("noProxy",".example.com");
 		BasicHttpTester tester = new BasicHttpTester(map);
 		final Map<String, Object> params = new HashMap<>();
 		final Map<String, Object> headers = new HashMap<>();
@@ -51,11 +51,11 @@ public class BasicHttpTesterTest {
 		assertNotNull(p.getHeaders());
 		assertEquals(1,p.getHeaders().size());
 		assertEquals("toto", p.getHeaders().get("apikey"));
-		assertFalse(tester.isProxyRequired(URI.create("http://www.example.renault.fr"), p));
+		assertFalse(tester.isProxyRequired(URI.create("http://www.example2.com"), p));
 		assertTrue(tester.isProxyRequired(URI.create("http://www.example.com"), p));
 		
 		params.put("useProxy", true);
-		assertTrue(tester.isProxyRequired(URI.create("http://www.example.renault.fr"), tester.verify(params)));
+		assertTrue(tester.isProxyRequired(URI.create("http://www.example2.com"), tester.verify(params)));
 		
 		params.put("useProxy", false);
 		assertFalse(tester.isProxyRequired(URI.create("http://www.example.com"), tester.verify(params)));

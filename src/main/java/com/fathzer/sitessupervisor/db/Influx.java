@@ -36,7 +36,7 @@ public class Influx implements DB {
 	public static class Database {
 		private String host = "127.0.0.1";
 		private int port = 8086;
-		private String database = "check-my-sites";
+		private String database = "sites-supervisor";
 		private String user = null;
 		private String password = null;
 	}

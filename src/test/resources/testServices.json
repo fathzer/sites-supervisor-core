@@ -3,7 +3,7 @@
 		{
 			"app":"after-server",
 			"env":"prod",
-			"uri":"http://xpd.dok.intra.renault.fr/ping",
+			"uri":"http://site1.example.com/ping",
 			"frequencyMinutes":2,
 			"alerters": [{
 				"name":"mail"
@@ -15,7 +15,7 @@
 		{
 			"app":"rpd-ws",
 			"env":"prod",
-			"uri":"http://sicgope01.mc2.renault.fr:15080/v1/ping",
+			"uri":"http://site2.example.com:15080/v1/ping",
 			"frequencyMinutes":1,
 			"alerters": [{
 				"name":"mail"
@@ -27,7 +27,7 @@
 		{
 			"app":"rpd-ws",
 			"env":"prod",
-			"uri":"http://sicgope01.mc2.renault.fr:17080/ping",
+			"uri":"http://site3.example.com/ping",
 			"frequencyMinutes":3,
 			"alerters": [{
 				"name":"mail"

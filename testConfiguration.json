@@ -7,7 +7,7 @@
 			"class":"com.fathzer.sitessupervisor.alerter.EMailAlerter",
 			"parameters":{
 				"host":"smtp",
-				"from":"noreply-supervisor@renault.com"
+				"from":"noreply-supervisor@example.com"
 			}
 		}
 	},
