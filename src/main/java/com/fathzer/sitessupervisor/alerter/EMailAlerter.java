@@ -99,7 +99,10 @@ public class EMailAlerter extends Alerter<EMailAlerter.ServiceParams> {
 			if (isSecured) {
 				props.put("mail.smtp.starttls.enable","true");
 				props.put("mail.smtp.auth", "true");
+				props.put("mail.smtp.socketFactory.port", Integer.toString(port));
 				props.put("mail.smtp.socketFactory.class", SSL_FACTORY);
+				props.put("mail.smtp.ssl.checkserveridentity", "true");
+				props.put("mail.smtp.socketFactory.fallback", "false");
 			}
 			this.user = params.getUser();
 			this.password = params.getPassword();
@@ -151,7 +154,7 @@ public class EMailAlerter extends Alerter<EMailAlerter.ServiceParams> {
 			} else {
 				body = String.format("The service at %s is down.\n It returned %s",info.getUri(), cause);
 			}
-			msg.setContent(body, "text/plain; charset=UTF-8"); //TODO
+			msg.setContent(body, "text/plain; charset=UTF-8");
 	
 			msg.setRecipients(Message.RecipientType.TO, config.getTo());
 	
