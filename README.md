@@ -54,7 +54,8 @@ Here is an configuration example:
 			}
 		}
 	}
-}```
+}
+```
 
 The important things to understand are:
 * All the components are identified by their class name.
