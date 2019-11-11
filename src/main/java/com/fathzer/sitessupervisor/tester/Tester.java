@@ -3,11 +3,13 @@ package com.fathzer.sitessupervisor.tester;
 import java.net.URI;
 import java.util.Map;
 
-import lombok.Getter;
-
-@Getter
+/**
+ * An abstract tester.
+ * @param <T> The type of the parameters dedicated to each service. 
+ */
 public abstract class Tester<T> {
 	/** Constructor.
+	 * <br>Please note all subclasses should have a constructor with the same arguments.
 	 * @param parameters The tester's parameters (could be null). For instance, for an http tester, the proxy server's configuration.
 	 * @throws IllegalArgumentException if mandatory parameters are missing in the map or contains invalid values.
 	 */

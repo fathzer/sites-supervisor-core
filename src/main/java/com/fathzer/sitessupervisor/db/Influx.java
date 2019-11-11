@@ -25,7 +25,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class Influx implements DB {
+public class Influx extends DB {
 	private static final String EVENTS_TABLE = "events";
 	private static final String RESPONSE_TIME_TABLE = "responseTime";
 	
@@ -42,6 +42,7 @@ public class Influx implements DB {
 	}
 
 	public Influx(Map<String, Object> params) {
+		super(params);
 		if (params!=null) {
 			this.settings = new ObjectMapper().convertValue(params, Database.class);
 			if (settings.port<0 || settings.port>65535) {
@@ -122,7 +123,7 @@ public class Influx implements DB {
 	}
 
 	@Override
-	public void report(ServiceInfo info, double responseTime, String cause) throws IOException {
+	public void write(ServiceInfo info, double responseTime, String cause) throws IOException {
 		final Builder builder = Point.measurement(RESPONSE_TIME_TABLE)
 			  .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
 			  .tag("url", info.getUri().toString())
@@ -137,7 +138,7 @@ public class Influx implements DB {
 	}
 
 	@Override
-	public void reportStateChange(ServiceInfo info, String errorMessage) throws IOException {
+	public void writeStateChange(ServiceInfo info, String errorMessage) throws IOException {
 		final Builder builder = Point.measurement(EVENTS_TABLE)
 			  .time(System.currentTimeMillis(), TimeUnit.MILLISECONDS)
 			  .tag("url", info.getUri().toString())

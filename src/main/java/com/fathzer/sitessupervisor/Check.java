@@ -47,12 +47,12 @@ public class Check extends TimerTask {
 				final boolean ok = cause==null;
 				if (db!=null) {
 					final long responseTime = System.currentTimeMillis()-now;
-					db.report(service.getInfo(), responseTime/1000.0, cause);
+					db.write(service.getInfo(), responseTime/1000.0, cause);
 				}
 				if (ok!=isOk) {
 					isOk = ok;
 					if (db!=null) {
-						db.reportStateChange(service.getInfo(), cause);
+						db.writeStateChange(service.getInfo(), cause);
 					}
 					alert(cause);
 				}

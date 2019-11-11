@@ -5,9 +5,9 @@ import java.util.Map;
 
 import com.fathzer.sitessupervisor.Configuration.ServiceInfo;
 
-public class FakeDB implements DB {
+public class FakeDB extends DB {
 	public FakeDB(Map<String, Object> params) {
-		super();
+		super(params);
 	}
 	
 	@Override
@@ -19,7 +19,7 @@ public class FakeDB implements DB {
 	}
 
 	@Override
-	public void report(ServiceInfo info, double responseTime, String cause) {
+	public void write(ServiceInfo info, double responseTime, String cause) {
 		// TODO Auto-generated method stub
 		System.out.println(String.format("%s;%s;%s;%f;%s",info.getUri(), info.getApp(), info.getEnv(), responseTime, cause));
 	}
@@ -30,7 +30,7 @@ public class FakeDB implements DB {
 	}
 
 	@Override
-	public void reportStateChange(ServiceInfo info, String errorMessage) throws IOException {
+	public void writeStateChange(ServiceInfo info, String errorMessage) throws IOException {
 		// TODO Auto-generated method stub
 		
 	}
