@@ -1,6 +1,33 @@
 # sites-supervisor-core
 
-The core functionalities of an [uptimeRobot](https://uptimerobot.com/) like application supervisor.
+The core functionalities of an [uptimeRobot](https://uptimerobot.com/) like application supervisor.  
+It allows you to test a bunch of application, be informed of the failures and store the history of test result in order to easily create dashboards. 
+
+## Table of contents
+1. [Requirements and installation](#requirements-and-installation)
+1. [Main concepts](#main-concepts)
+1. [Configuration](#configuration)
+  1. [Global configuration](#global-configuration)
+  1. [Supervised application configuration](#supervised-application-configuration)
+1. [Components documentation](#components-documentation)
+  1. [com.fathzer.sitessupervisor.db.Influx](#comfathzersitessupervisordbinflux)
+  1. [com.fathzer.sitessupervisor.alerter.EMailAlerter](#comfathzersitessupervisoralerteremailalerter)
+  1. [com.fathzer.sitessupervisor.tester.BasicHttpTester](#comfathzersitessupervisortesterbasichttptester)
+  1. [com.fathzer.sites.supervisor.SupervisorCommand](#comfathzersitessupervisorsupervisorcommand)
+1. [Writing your own database connectorsn testers and alerters](#writing-your-own-database-connectors-testers-and-alerters)
+1. [Logging](#logging)
+
+## Requirements and installation
+This library requires Java 8+.
+
+It is released as a Maven artifact. Add this to your pom.  
+```xml
+<dependency>
+	<groupId>com.fathzer</groupId>
+	<artifactId>sites-supervisor-core</artifactId>
+	<version>0.0.2</version>
+</dependency>
+```
 
 ## Main concepts
 Basically, an application supervisor is composed of 4 kinds of components:
@@ -15,7 +42,7 @@ This library includes the following implementation of these concepts:
 * **Alerters**:
   * **[com.fathzer.sitessupervisor.alerter.EMailAlerter](#comfathzersitessupervisoralerteremailalerter)**: An email alerter that connects to an smtp server to send mails.
 * **Database**:
-  * **[com.fathzer.sitessupervisor.db.Influx](#comfathzersitessupervisoralerteremailalerter)**: A connector to [InfluxDB](https://www.influxdata.com/).
+  * **[com.fathzer.sitessupervisor.db.Influx](#comfathzersitessupervisordbinflux)**: A connector to [InfluxDB](https://www.influxdata.com/).
 * **Supervisor**:
   * **com.fathzer.sitessupervisor.Supervisor**: A supervisor that manages the full life cycle of the supervision.
   
@@ -100,7 +127,7 @@ The important things to understand are:
   * **app** and **env** and are tags that identifies the application and its environment (production, acceptance, ...).
   * frequencyMinutes sets the test frequency. Default value is 5 minutes.
   * timeOutSeconds is the maximum time allowed to the test to reply. If no reply is obtained in the specified time, service is considered down. Default value is 30s.
-* A service should have a *tester* attribute and can have no *alerters*. Alerters and tester and identified by the name declared in [**global configuration**](#globalconfiguration).
+* A service should have a *tester* attribute and can have no *alerters*. Alerters and tester and identified by the name declared in [**global configuration**](#global-configuration).
 * All the components have a *parameters* attribute that contains the configuration of the component for the service. The exact content of this attribute (and its obligatory presence) depends on the component (see component documentation).
 
 ## Components documentation
@@ -133,7 +160,7 @@ Here are the global parameters:
 * **password**: The user's password on the smtp server.
 * **from**: The email address used to send the mails.
 
-The [**global configuration**](#globalconfiguration) shows how to configure this alerter to use GMail smtp server.
+The [**global configuration**](#global-configuration) shows how to configure this alerter to use GMail smtp server.
 
 The only attribute of the application configuration parameters is **to** that contains the list of the recipients of emails. 
 
@@ -144,7 +171,7 @@ Here are the global parameters:
 * **noProxy**: A list of host name suffixes (optional). For example, if the suffix *.example.com* is in the list, 'mysite.example.com' will be accessed without proxy.
 
 Here are the application specific parameters:
-* **headers**: A map of headers to add to the http request. Keys are the headers name, value are the headers value. See [Supervised application configuration](#supervisedapplicationconfiguration) to have an example.
+* **headers**: A map of headers to add to the http request. Keys are the headers name, value are the headers value. See [Supervised application configuration](#supervised-application-configuration) to have an example.
 * **useProxy**: Set the proxy usage (optional). This settings overrides the global one. This mean if the url matches one of the excluded suffixes declared in the global configuration, but this attribute is true, the proxy will be used. Same thing if set to false and url not matches any suffix.
 
 Please note this class can be easily subclassed to change its behavior. The *verify* method can be overridden to accept more parameters and *buildRequest* and *isValid* methods can then have other behavior (let say, use POST instead of GET and accept 201 instead of 200).
@@ -172,4 +199,3 @@ The best documentation is ... to have a look at the implemented class and their 
 
 ## Logging
 This package uses [slf4j facade](http://www.slf4j.org/) for logging. You are free to use the implementation you want, for instance [logback classic](http://logback.qos.ch/). 
-
