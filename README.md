@@ -7,13 +7,13 @@ It allows you to test a bunch of application, be informed of the failures and st
 1. [Requirements and installation](#requirements-and-installation)
 1. [Main concepts](#main-concepts)
 1. [Configuration](#configuration)
-  1. [Global configuration](#global-configuration)
-  1. [Supervised application configuration](#supervised-application-configuration)
+   1. [Global configuration](#global-configuration)
+   1. [Supervised application configuration](#supervised-application-configuration)
 1. [Components documentation](#components-documentation)
-  1. [com.fathzer.sitessupervisor.db.Influx](#comfathzersitessupervisordbinflux)
-  1. [com.fathzer.sitessupervisor.alerter.EMailAlerter](#comfathzersitessupervisoralerteremailalerter)
-  1. [com.fathzer.sitessupervisor.tester.BasicHttpTester](#comfathzersitessupervisortesterbasichttptester)
-  1. [com.fathzer.sites.supervisor.SupervisorCommand](#comfathzersitessupervisorsupervisorcommand)
+   1. [com.fathzer.sitessupervisor.db.Influx](#comfathzersitessupervisordbinflux)
+   1. [com.fathzer.sitessupervisor.alerter.EMailAlerter](#comfathzersitessupervisoralerteremailalerter)
+   1. [com.fathzer.sitessupervisor.tester.BasicHttpTester](#comfathzersitessupervisortesterbasichttptester)
+   1. [com.fathzer.sites.supervisor.SupervisorCommand](#comfathzersitessupervisorsupervisorcommand)
 1. [Writing your own database connectorsn testers and alerters](#writing-your-own-database-connectors-testers-and-alerters)
 1. [Logging](#logging)
 
@@ -25,7 +25,7 @@ It is released as a Maven artifact. Add this to your pom.
 <dependency>
 	<groupId>com.fathzer</groupId>
 	<artifactId>sites-supervisor-core</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.1</version>
 </dependency>
 ```
 
