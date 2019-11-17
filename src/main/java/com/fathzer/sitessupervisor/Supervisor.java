@@ -58,10 +58,11 @@ public class Supervisor {
 	/** Sets the list of services supervised by this supervisor.
 	 * @param services The new service list. All services previously set and absent from this collection will be removed.<br>
 	 * To modify an individual service, prefer the {@link #addService(Service)} method.
+	 * @return true if some changes was made, false if the new services list is equivalent to the current one.
 	 * @throws IllegalArgumentException if two or more services share the same URL.
 	 * @see #addService(Service)
 	 */
-	public synchronized void setServices(Collection<Service> services) {
+	public synchronized boolean setServices(Collection<Service> services) {
 		// 1 Test there's no duplicated URI.
 		// 1.1 Build a map of URI -> number of occurrences in services
 		final Map<URI, Long> map = services.stream().map(s -> s.getInfo().getUri()).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
@@ -73,28 +74,32 @@ public class Supervisor {
 		}
 		// 2 Remove URI that are no more in the services list.
 		// The collect step in this streamed process is mandatory to prevent having concurrent modification on the keySet.
-		checks.keySet().stream().filter(uri -> !map.containsKey(uri)).collect(Collectors.toList()).forEach(this::removeService);
+		List<URI> removed = checks.keySet().stream().filter(uri -> !map.containsKey(uri)).collect(Collectors.toList());
+		removed.forEach(this::removeService);
 		// 3 Updates the services.
-		services.forEach(this::addService);
+		List<Boolean> updated = services.stream().map(this::addService).collect(Collectors.toList());
+		
+		return updated.stream().anyMatch(b -> b) || !removed.isEmpty();
 	}
 
 	/** Adds or updates a service.
 	 * @param service The service to update.
-	 * @return true if the service was already supervised (it has been updated if its configuration has changed), false if the service was unknown.
+	 * @return true if the passed service is different from the previous setting for that URI.
 	 */
 	public synchronized boolean addService(Service service) {
 		// Verify that the service settings are different from previous ones.
 		final Check previous = checks.get(service.getInfo().getUri());
-		if (previous!=null && service.equals(previous.getService())) {
+		if (previous==null || !service.equals(previous.getService())) {
+			final Check task = new Check(service, db, workers);
+			checks.put(service.getInfo().getUri(), task);
+			if (scheduler!=null) {
+				stop(previous);
+				schedule(task);
+			}
 			return true;
+		} else {
+			return false;
 		}
-		final Check task = new Check(service, db, workers);
-		checks.put(service.getInfo().getUri(), task);
-		if (scheduler!=null) {
-			stop(previous);
-			schedule(task);
-		}
-		return previous!=null;
 	}
 	
 	/** Stops the supervision of a service. 

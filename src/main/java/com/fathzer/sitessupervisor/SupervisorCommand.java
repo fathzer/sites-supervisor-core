@@ -96,15 +96,27 @@ public class SupervisorCommand extends AbstractSupervisorCommand<WatchService> {
 	@Override
 	protected void startSpy(final Supervisor supervisor, final Path path, final WatchService spy) throws IOException {
 		log.info("Start listening services file changes");
-		path.toAbsolutePath().getParent().register(spy, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
+		path.toAbsolutePath().getParent().register(spy, StandardWatchEventKinds.ENTRY_DELETE, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
 		try {
 			WatchKey key;
 			while ((key=spy.take()) != null) {
 				for (WatchEvent<?> event : key.pollEvents()) {
-					final Path context = (Path) event.context();
-					if (Files.isSameFile(context, path)) {
-						log.info("Change detected on services file");
-						doUpdate(supervisor, path);
+					try {
+						final Path context = (Path) event.context();
+						if (context.endsWith(path.getFileName())) {
+							if (StandardWatchEventKinds.ENTRY_DELETE.equals(event.kind()) || Files.size(path)==0) {
+								// Warning: Some editors (for instance when a file is edited by FileZilla), generate two events when modifying a file
+								// One with a 0 length file, and one when the file is updated.
+								// A 0 length file could signify we want to stop supervision ... but in that case, we also could stop the supervisor ...
+								// So, to keep things simple, we will ignore the 0 length file events.
+								log.info("Ignoring services file was cleared or deleted");
+							} else {
+								log.info("Change detected on services file");
+								doUpdate(supervisor, path);
+							}
+						}
+					} catch (Exception e) {
+						log.warn("exception while updating services", e);
 					}
 				}
 				key.reset();
@@ -120,7 +132,9 @@ public class SupervisorCommand extends AbstractSupervisorCommand<WatchService> {
 	private static void doUpdate(Supervisor supervisor, Path path) {
 		try (InputStream in = Files.newInputStream(path, StandardOpenOption.READ)) {
 			List<Service> services = new JSONParser().parseServices(in, supervisor.getSettings());
-			supervisor.setServices(services);
+			if (!supervisor.setServices(services)) {
+				log.info("Service configuration contains no service update");
+			}
 		} catch (Exception e) {
 			log.error("Error while updating service configuration", e);
 		}
