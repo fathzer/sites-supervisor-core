@@ -1,7 +1,7 @@
 # sites-supervisor-core
 
 The core functionalities of an [uptimeRobot](https://uptimerobot.com/) like application supervisor.  
-It allows you to test a bunch of application, be informed of the failures and store the history of test result in order to easily create dashboards. 
+It allows you to test a bunch of applications, be informed of the failures and store the history of test results in order to easily create dashboards. 
 
 ## Table of contents
 1. [Requirements and installation](#requirements-and-installation)
@@ -31,30 +31,30 @@ It is released as a Maven artifact. Add this to your pom.
 
 ## Main concepts
 Basically, an application supervisor is composed of 4 kinds of components:
-* **Testers** send requests to sites and test the reply is ok or ko.
-* Optionally, **Alerters** send alerts to administrator sites when the site's status change from ok to ko, or ko to ok.
-* Optionally, a **Database** stores the tests results and allow an visualization application to query the sites status history.
-* A **SuperVisor** that manage the other components. It schedules the tests, stores the results in a database and trigger alerters.
+* **Testers** send requests to sites and test whether the reply is ok or ko.
+* Optionally, **Alerters** send alerts to site's administrator when the site's status changes from ok to ko, or ko to ok.
+* Optionally, a **Database** stores the tests results and allows a visualization application to query the sites status history.
+* A **SuperVisor** that manages the other components. It schedules the tests, stores the results in a database and triggers alerters.
 
 This library includes the following implementation of these concepts:
 * **Testers**:
   * **[com.fathzer.sitessupervisor.tester.BasicHttpTester](#comfathzersitessupervisortesterbasichttptester)**: An http tester that query a URI and tests the status code is 200. It supports adding headers (for example to provide an api key), and proxy.
 * **Alerters**:
-  * **[com.fathzer.sitessupervisor.alerter.EMailAlerter](#comfathzersitessupervisoralerteremailalerter)**: An email alerter that connects to an smtp server to send mails.
+  * **[com.fathzer.sitessupervisor.alerter.EMailAlerter](#comfathzersitessupervisoralerteremailalerter)**: An email alerter that connects to a smtp server to send mails.
 * **Database**:
   * **[com.fathzer.sitessupervisor.db.Influx](#comfathzersitessupervisordbinflux)**: A connector to [InfluxDB](https://www.influxdata.com/).
 * **Supervisor**:
   * **com.fathzer.sitessupervisor.Supervisor**: A supervisor that manages the full life cycle of the supervision.
   
-This package also provides **com.fathzer.sitessupervisor.parsing.JSONParser** that allows you to parse configuration files in JSON format, and **com.fathzer.sitessupervisor.SupervisorCommand**, an runnable class that parses JSON configuration file, then instantiate and run a Supervisor.
+This package also provides **com.fathzer.sitessupervisor.parsing.JSONParser** that allows you to parse configuration files in JSON format, and **com.fathzer.sitessupervisor.SupervisorCommand**, a runnable class that parses JSON configuration files, then instantiate and run a Supervisor.
 
 ## Configuration
 The configuration of a supervisor is divided in two parts:
 * A static one, defined at supervisor creation, that contains database, testers and alerters global configuration.
-* A dynamic one, that can be changed during Supervisor life time, that contains informations related to the supervised applications. This allows you to add/modify/remove application from supervision.
+* A dynamic one, that can be changed during Supervisor life time, that contains informations related to the supervised applications. This allows you to add/modify/remove application from supervision without restarting it.
 
 ### Global configuration
-Here is an configuration example:
+Here is a configuration example:
 ```json
 {
 	"database":{
@@ -86,7 +86,7 @@ Here is an configuration example:
 
 The important things to understand are:
 * All the components are identified by their class name.
-* All the components have a parameters attribute that contains the configuration of the component. The exact content of this attribute (and its obligatory presence) depends on the component (see component documentation).
+* All the components have a *parameters* attribute that contains the configuration of the component. The exact content of this attribute (and its obligatory presence) depends on the component (see component documentation).
 * alerters and testers have unique names (here *mail* and *http200*) that will be used to identified them in supervised application configuration configuration file.
 
 ### Supervised application configuration
@@ -124,7 +124,7 @@ Here is a configuration example:
 The important things to understand are:
 * Services (application) are identified by their URL. Two services can't share the same URL.
 * **app**, **env**, **frequencyMinutes** and **timeOutSeconds** attributes are optional.
-  * **app** and **env** and are tags that identifies the application and its environment (production, acceptance, ...).
+  * **app** and **env** are tags that identifies the application and its environment (production, acceptance, ...).
   * frequencyMinutes sets the test frequency. Default value is 5 minutes.
   * timeOutSeconds is the maximum time allowed to the test to reply. If no reply is obtained in the specified time, service is considered down. Default value is 30s.
 * A service should have a *tester* attribute and can have no *alerters*. Alerters and tester and identified by the name declared in [**global configuration**](#global-configuration).
@@ -140,7 +140,7 @@ Here are the parameters (all are optional):
 * **password**: The user's password.
 
 The data is stored in 2 series:
-* **responseTime** that contains one measurement point by test with the following tags and fields:
+* **responseTime** that contains one measurement point per test with the following tags and fields:
   * tags **url**, **app**, **env** that contain the values specified in the application configuration.
   * field **success** that contains 1 if the test succeeded, 0 if it failed.
   * field **responseTime** that contains the responseTime (0 if the test fails).
@@ -153,11 +153,11 @@ The data is stored in 2 series:
 ### com.fathzer.sitessupervisor.alerter.EMailAlerter
 As its name lets suppose, this alerter sends email to addresses to inform of status changes.
 Here are the global parameters:
-* **host**: The host name of an smtp server.
+* **host**: The host name of a smtp server.
 * **port**: The port of the smtp server. This attribute is optional, default is 25 if secured is not specified or set to false, 587 if secured is true. 
 * **secured**: Sets SSL connection to smtp server. This attribute is optional. Default is false unless port is specified and set to 587.
 * **user**: The user of the smtp server (optional).
-* **password**: The user's password on the smtp server.
+* **password**: The user's password on the smtp server (mandatory if *user* is specified).
 * **from**: The email address used to send the mails.
 
 The [**global configuration**](#global-configuration) shows how to configure this alerter to use GMail smtp server.
@@ -165,14 +165,14 @@ The [**global configuration**](#global-configuration) shows how to configure thi
 The only attribute of the application configuration parameters is **to** that contains the list of the recipients of emails. 
 
 ### com.fathzer.sitessupervisor.tester.BasicHttpTester
-This tester sends http request to the specified URL and considers the result as ok if it gets a 200 status code.
+This tester sends http request to the specified URL and considers the result is ok if it gets a 200 status code.
 Here are the global parameters:
 * **proxy**: The address of the proxy to use to access Internet (optional). The format is *host:port* (example *proxy.example.com:3128*).
 * **noProxy**: A list of host name suffixes (optional). For example, if the suffix *.example.com* is in the list, 'mysite.example.com' will be accessed without proxy.
 
 Here are the application specific parameters:
 * **headers**: A map of headers to add to the http request. Keys are the headers name, value are the headers value. See [Supervised application configuration](#supervised-application-configuration) to have an example.
-* **useProxy**: Set the proxy usage (optional). This settings overrides the global one. This mean if the url matches one of the excluded suffixes declared in the global configuration, but this attribute is true, the proxy will be used. Same thing if set to false and url not matches any suffix.
+* **useProxy**: Set the proxy usage (optional). This settings overrides the global one. This means if the url matches one of the excluded suffixes declared in the global configuration, but this attribute is true, the proxy will be used. Same thing if set to false and url not matches any suffix.
 
 Please note this class can be easily subclassed to change its behavior. The *verify* method can be overridden to accept more parameters and *buildRequest* and *isValid* methods can then have other behavior (let say, use POST instead of GET and accept 201 instead of 200).
 
@@ -181,7 +181,7 @@ Please note this class can be easily subclassed to change its behavior. The *ver
 The supervisor command class allows you to launch a supervisor using the command line.
 Simply launch this class (*java com.fathzer.sitessupervisor.SupervisorCommand*) to display help.
 
-Please note that once launched, this class listen to the application file configuration changes and reloads it every time it changes.  
+Please note that once launched, this class listens to the application file configuration changes and reloads it every time it changes.  
 Please note if the file can't be parsed, changes are ignored. Nevertheless, it's safer to make a backup of the configuration file before modifying it.
 
 ## Writing your own database connectors, testers and alerters
@@ -191,9 +191,9 @@ Testers should extends the com.fathzer.sitessupervisor.tester.Tester class.
 Alerters should extends the com.fathzer.sitessupervisor.alerter.Alerter class.  
 Database connectors should extends the com.fathzer.sitessupervisor.db.DB class.
 
-Note that the instances of these class are unique and **should be thread safe**.  
+Note that the instances of these classes are unique and **should be thread safe**.  
 They should have a constructor accepting a *Map<String, Object>* argument.
-The *verify* method of alerters and testers returns an object that should implement an equals method that guarantees two objects created with equivalent parameters will be equals (This guarantees that only application changed are impacted when configuration file changes).   
+The *verify* method of alerters and testers returns an object that should implement an *equals* method that guarantees two objects created with equivalent parameters will be equals (This guarantees that only application changed are impacted when configuration file changes).   
 
 The best documentation is ... to have a look at the implemented class and their super class ;-)
 
