@@ -47,6 +47,12 @@ public class EMailAlerterTest {
 		alerter.verify(map);
 	}
 	
+	@Test(expected = IllegalArgumentException.class)
+	public void testWrongServiceArg2() throws IOException {
+		final Map<String,Object> map = MAPPER.readValue("{'to':[]}".replace('\'', '"'), Map.class);
+		alerter.verify(map);
+	}
+	
 	@Test
 	public void testEquality() throws IOException {
 		Map<String,Object> map = MAPPER.readValue("{'to':['jean-marc.astesana@example.com','toto@titi.com']}".replace('\'', '"'), Map.class);

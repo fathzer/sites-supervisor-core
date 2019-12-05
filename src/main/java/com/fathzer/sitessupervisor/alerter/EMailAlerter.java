@@ -127,6 +127,8 @@ public class EMailAlerter extends Alerter<EMailAlerter.ServiceParams> {
 			Collection<?> tos = (Collection<?>) serviceParameters.get("to");
 			if (tos==null) {
 				throw new IllegalArgumentException("'to' attribute is missing");
+			} else if (tos.isEmpty()) {
+				throw new IllegalArgumentException("'to' attribute can't be an empty array");
 			}
 			final Collection<InternetAddress> to = tos.stream().map(add -> {
 				try {
