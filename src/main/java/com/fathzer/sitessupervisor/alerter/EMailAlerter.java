@@ -120,8 +120,14 @@ public class EMailAlerter extends Alerter<EMailAlerter.ServiceParams> {
 
 	@Override
 	public ServiceParams verify(Map<String, Object> serviceParameters) {
+		if (serviceParameters==null) {
+			throw new IllegalArgumentException("Parameters can't be null");
+		}
 		try {
 			Collection<?> tos = (Collection<?>) serviceParameters.get("to");
+			if (tos==null) {
+				throw new IllegalArgumentException("'to' attribute is missing");
+			}
 			final Collection<InternetAddress> to = tos.stream().map(add -> {
 				try {
 					return new InternetAddress(add.toString());
