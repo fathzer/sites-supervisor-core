@@ -86,26 +86,30 @@ public class JSONParser {
 	private Service toService(ServiceSetting setting, Configuration config) {
 		//TODO null check of mandatory attributes => IllegalArgumentException
 		Set<AlerterPluginConfig<?>> alerters = setting.getAlerters()==null ?
-			Collections.emptySet() : setting.getAlerters().stream().map(e -> toAlerterConfig(config, e)).collect(Collectors.toSet());
+			Collections.emptySet() : setting.getAlerters().stream().map(e -> toAlerterConfig(setting.uri, config, e)).collect(Collectors.toSet());
 		ServiceInfo id = new ServiceInfo(setting.getUri(), setting.getApp(), setting.getEnv());	
 		return new Service(id, setting.getFrequencyMinutes(),
-				setting.getTimeOutSeconds(), toTesterConfig(config, setting.tester), alerters);
+				setting.getTimeOutSeconds(), toTesterConfig(id.getUri(), config, setting.tester), alerters);
 	}
 
 	private DB toDataBase(GenericPluginSetting database) {
 		return toPlugin(database, DB.class);
 	}
 
-	private <T> AlerterPluginConfig<T> toAlerterConfig(Configuration config, BasicSetting setting) {
+	private <T> AlerterPluginConfig<T> toAlerterConfig(URI uri, Configuration config, BasicSetting setting) {
 		@SuppressWarnings("unchecked")
 		final Alerter<T> alerter = (Alerter<T>) config.getAlerters().get(setting.getName());
 		if (alerter==null) {
 			throw new IllegalArgumentException(String.format("No alerter named %s found", setting.getName()));
 		}
-		return new AlerterPluginConfig<T>(alerter, alerter.verify(setting.getParameters()));
+		try {
+			return new AlerterPluginConfig<T>(alerter, alerter.verify(setting.getParameters()));
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(String.format("Configuration of %s alerter is wrong for %s", setting.getName(), uri), e);
+		}
 	}
 
-	private <T> TesterPluginConfig<T> toTesterConfig(Configuration config, BasicSetting setting) {
+	private <T> TesterPluginConfig<T> toTesterConfig(URI uri, Configuration config, BasicSetting setting) {
 		if (setting==null) {
 			return null;
 		}
@@ -114,7 +118,11 @@ public class JSONParser {
 		if (tester==null) {
 			throw new IllegalArgumentException(String.format("No tester named %s found", setting.getName()));
 		}
-		return new TesterPluginConfig<T>(tester, tester.verify(setting.getParameters()));
+		try {
+			return new TesterPluginConfig<T>(tester, tester.verify(setting.getParameters()));
+		} catch (IllegalArgumentException e) {
+			throw new IllegalArgumentException(String.format("Configuration of %s tester is wrong for %s", setting.getName(), uri), e);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
