@@ -23,6 +23,7 @@ public abstract class Alerter<T> {
 	 * @return An object that represents the serviceParameter in a ready to use representation (for instance, for an email alerter, the email addresses ready to by used by javax.mail package).
 	 * The returned object will be passed to the {@link #alert(ServiceInfo, Object, String)} method.
 	 * It should implement an equals method that guarantees two objects created with equivalent parameters will be equals (This guarantees that only services changed are impacted when configuration file changes)
+	 * @throws IllegalArgumentException if mandatory parameters are missing in the map or contains invalid values.
 	 */
 	public abstract T verify(Map<String, Object> serviceParameters);
 
