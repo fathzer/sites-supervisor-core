@@ -39,7 +39,7 @@ public class SupervisorCommand extends AbstractSupervisorCommand<WatchService> {
 			try {
 				sc.launch(cmd.get());
 			} catch (IOException e) {
-				log.error("Unable to read configuration files",e);
+				log.error("Unable to launch server",e);
 			}
 		}
 	}

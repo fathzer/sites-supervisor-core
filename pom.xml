@@ -8,7 +8,7 @@
 		<version>1.0.3</version>
 	</parent>
 	<artifactId>sites-supervisor-core</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.4</version>
 	<name>sites-supervisor-core</name>
 	<url>https://github.com/fathzer/sites-supervisor-core</url>
 	<scm>
@@ -62,7 +62,7 @@
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
-			<version>2.9.10.1</version>
+			<version>2.9.10.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -99,12 +99,6 @@
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.25</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>

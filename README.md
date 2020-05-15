@@ -38,7 +38,7 @@ Basically, an application supervisor is composed of 4 kinds of components:
 
 This library includes the following implementation of these concepts:
 * **Testers**:
-  * **[com.fathzer.sitessupervisor.tester.BasicHttpTester](#comfathzersitessupervisortesterbasichttptester)**: An http tester that query a URI and tests the status code is 200. It supports adding headers (for example to provide an api key), and proxy.
+  * **[com.fathzer.sitessupervisor.tester.BasicHttpTester](#comfathzersitessupervisortesterbasichttptester)**: An http tester that queries an URI and tests the status code is 200. It supports adding headers (for example to provide an api key), and proxy.
 * **Alerters**:
   * **[com.fathzer.sitessupervisor.alerter.EMailAlerter](#comfathzersitessupervisoralerteremailalerter)**: An email alerter that connects to a smtp server to send mails.
 * **Database**:

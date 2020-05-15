@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.influxdb.InfluxDB;
 import org.influxdb.InfluxDBFactory;
+import org.influxdb.InfluxDBIOException;
 import org.influxdb.dto.BoundParameterQuery.QueryBuilder;
 import org.influxdb.dto.Point;
 import org.influxdb.dto.Point.Builder;
@@ -60,22 +61,26 @@ public class Influx extends DB {
 	public void connect() throws IOException {
 		if (db==null) {
 			final String url = "http://"+settings.getHost()+":"+settings.getPort();
-			this.db = settings.user!=null ? InfluxDBFactory.connect(url, settings.user, settings.password) : InfluxDBFactory.connect(url);
-			Pong response = this.db.ping();
-			if (response.getVersion().equalsIgnoreCase("unknown")) {
-			    log.error("Error pinging server.");
-			    return;
-			} else {
-				log.info("Connection to influxDB is ok, version is {}", response.getVersion());
-				if (!databaseExists()) {
-			    // Create data base
-					this.db.createDatabase(settings.getDatabase());
-					this.db.createRetentionPolicy("defaultPolicy", settings.getDatabase(), "30d", 1, true);
-					log.info("Database {} created", settings.getDatabase());
+			try {
+				this.db = settings.user!=null ? InfluxDBFactory.connect(url, settings.user, settings.password) : InfluxDBFactory.connect(url);
+				Pong response = this.db.ping();
+				if (response.getVersion().equalsIgnoreCase("unknown")) {
+				    log.error("Error pinging server.");
+				    return;
+				} else {
+					log.info("Connection to influxDB is ok, version is {}", response.getVersion());
+					if (!databaseExists()) {
+						// Create data base
+						this.db.createDatabase(settings.getDatabase());
+						this.db.createRetentionPolicy("defaultPolicy", settings.getDatabase(), "30d", 1, true);
+						log.info("Database {} created", settings.getDatabase());
+					}
+					this.db.enableBatch(100, 500, TimeUnit.MILLISECONDS);
+					this.db.setRetentionPolicy("defaultPolicy");
+					this.db.setDatabase(settings.getDatabase());
 				}
-				this.db.enableBatch(100, 500, TimeUnit.MILLISECONDS);
-				this.db.setRetentionPolicy("defaultPolicy");
-				this.db.setDatabase(settings.getDatabase());
+			} catch (InfluxDBIOException e) {
+				throw new IOException(e);
 			}
 		}
 	}

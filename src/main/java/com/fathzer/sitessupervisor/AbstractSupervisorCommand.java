@@ -23,11 +23,12 @@ public abstract class AbstractSupervisorCommand<T extends Closeable> {
 		final Collection<Service> services = getServices(cmd, settings);
 		final Supervisor supervisor = new Supervisor(settings);
 		final T spy = getUpdateSpy(cmd);
-		supervisor.start();
-		Runtime.getRuntime().addShutdownHook(new Thread(getShutdownHook(supervisor, spy)));
-		supervisor.setServices(services);
-		if (spy!=null) {
-			startSpy(supervisor, Paths.get(cmd.getArgs()[1]), spy);
+		if (supervisor.start()) {
+			Runtime.getRuntime().addShutdownHook(new Thread(getShutdownHook(supervisor, spy)));
+			supervisor.setServices(services);
+			if (spy!=null) {
+				startSpy(supervisor, Paths.get(cmd.getArgs()[1]), spy);
+			}
 		}
 	}
 	protected abstract Configuration getConfiguration(CommandLine cmd) throws IOException;

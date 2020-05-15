@@ -56,7 +56,9 @@ public class BasicHttpTester extends Tester<BasicHttpTester.ServiceParams> {
 				String addressString = (String)params.get(PROXY_ATTRIBUTE);
 				final InetSocketAddress address = new InetSocketAddress(addressString.substring(0, addressString.lastIndexOf(':')),
 					  Integer.parseInt(addressString.substring(addressString.lastIndexOf(':')+1)));
-				// Will throw IllegalArgumentException if address is unresolved ... this is what we want :-)
+				if (address.isUnresolved()) {
+					throw new IllegalArgumentException(String.format("The proxy server address (%s) is unknown",address.getHostString()));
+				}
 				this.parameters.proxy = new DefaultProxyRoutePlanner(new HttpHost(address.getAddress()));
 			} catch (ClassCastException e) {
 				throw new IllegalArgumentException(String.format(NOT_STRING_ERR, params.get(PROXY_ATTRIBUTE)));

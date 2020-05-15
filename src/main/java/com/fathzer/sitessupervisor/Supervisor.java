@@ -42,17 +42,23 @@ public class Supervisor {
 	}
 
 	/** Starts the supervisor.
-	 * @throws IOException
+	 * @return true if supervisor successfully started.
 	 */
-	public void start() throws IOException {
+	public boolean start() {
 		db = settings.getDatabase();
 		if (db!=null) {
-			db.connect();
+			try {
+				db.connect();
+			} catch (IOException e) {
+				log.error("Unable to connect to data base",e);
+				return false;
+			}
 		}
 		scheduler = new Timer();
 		workers = Executors.newCachedThreadPool();
 		checks.values().forEach(this::schedule);
 		log.info("Supervision started");
+		return true;
 	}
 	
 	/** Sets the list of services supervised by this supervisor.

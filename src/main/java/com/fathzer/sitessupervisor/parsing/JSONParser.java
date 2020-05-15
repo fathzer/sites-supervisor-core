@@ -69,14 +69,18 @@ public class JSONParser {
 	public Configuration parseConfiguration (InputStream stream) throws IOException {
 		final Settings settings = MAPPER.readValue(stream, Settings.class);
 		Configuration config = new Configuration();
-		if (settings.getDatabase()!=null) {
-			config.setDatabase(toDataBase(settings.getDatabase()));
+		try {
+			if (settings.getDatabase()!=null) {
+				config.setDatabase(toDataBase(settings.getDatabase()));
+			}
+			config.setAlerters(settings.alerters.entrySet().stream().collect(Collectors.toMap(
+					Map.Entry::getKey, e -> toPlugin(e.getValue(), Alerter.class))));
+			config.setTesters(settings.testers.entrySet().stream().collect(Collectors.toMap(
+					Map.Entry::getKey, e -> toPlugin(e.getValue(), Tester.class))));
+			return config;
+		} catch (IllegalArgumentException e) {
+			throw new IOException("Unable to parse configuration",e);
 		}
-		config.setAlerters(settings.alerters.entrySet().stream().collect(Collectors.toMap(
-				Map.Entry::getKey, e -> toPlugin(e.getValue(), Alerter.class))));
-		config.setTesters(settings.testers.entrySet().stream().collect(Collectors.toMap(
-				Map.Entry::getKey, e -> toPlugin(e.getValue(), Tester.class))));
-		return config;
 	}
 	
 	public List<Service> parseServices(InputStream stream, Configuration config) throws IOException {
