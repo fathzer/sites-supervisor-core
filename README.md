@@ -12,6 +12,7 @@ It allows you to test a bunch of applications, be informed of the failures and s
 1. [Components documentation](#components-documentation)
    1. [com.fathzer.sitessupervisor.db.Influx](#comfathzersitessupervisordbinflux)
    1. [com.fathzer.sitessupervisor.alerter.EMailAlerter](#comfathzersitessupervisoralerteremailalerter)
+   1. [com.fathzer.sitessupervisor.alerter.TeamsAlerter](#comfathzersitessupervisoralerterteamsalerter)
    1. [com.fathzer.sitessupervisor.tester.BasicHttpTester](#comfathzersitessupervisortesterbasichttptester)
    1. [com.fathzer.sites.supervisor.SupervisorCommand](#comfathzersitessupervisorsupervisorcommand)
 1. [Writing your own database connectorsn testers and alerters](#writing-your-own-database-connectors-testers-and-alerters)
@@ -25,7 +26,7 @@ It is released as a Maven artifact. Add this to your pom.
 <dependency>
 	<groupId>com.fathzer</groupId>
 	<artifactId>sites-supervisor-core</artifactId>
-	<version>0.0.3</version>
+	<version>0.0.5</version>
 </dependency>
 ```
 
@@ -41,6 +42,7 @@ This library includes the following implementation of these concepts:
   * **[com.fathzer.sitessupervisor.tester.BasicHttpTester](#comfathzersitessupervisortesterbasichttptester)**: An http tester that queries an URI and tests the status code is 200. It supports adding headers (for example to provide an api key), and proxy.
 * **Alerters**:
   * **[com.fathzer.sitessupervisor.alerter.EMailAlerter](#comfathzersitessupervisoralerteremailalerter)**: An email alerter that connects to a smtp server to send mails.
+  * **[com.fathzer.sitessupervisor.alerter.TeamsAlerter](#comfathzersitessupervisoralerterteamsalerter)**: An Alerter that sends messages in a Microsoft teams Team channel.
 * **Database**:
   * **[com.fathzer.sitessupervisor.db.Influx](#comfathzersitessupervisordbinflux)**: A connector to [InfluxDB](https://www.influxdata.com/).
 * **Supervisor**:
@@ -163,6 +165,15 @@ Here are the global parameters:
 The [**global configuration**](#global-configuration) shows how to configure this alerter to use GMail smtp server.
 
 The only attribute of the application configuration parameters is **to** that contains the list of the recipients of emails. 
+
+### com.fathzer.sitessupervisor.alerter.TeamsAlerter
+This alerter posts message in a Microsoft Teams team channel to inform of status changes.
+Here are the global parameters:
+* **proxy**: The address of the proxy to use to access Internet (optional). The format is *host:port* (example *proxy.example.com:3128*).
+* **noProxy**: A list of host name suffixes (optional). For example, if the suffix *.example.com* is in the list, 'mysite.example.com' will be accessed without proxy.
+
+The attributes of the application configuration parameters are:
+* **hook** that contains the URL of a Teams incoming web hook. Please see [Teams documentations](https://docs.microsoft.com/fr-fr/microsoftteams/platform/webhooks-and-connectors/how-to/connectors-using#setting-up-a-custom-incoming-webhook) to known how to create an incoming web hook for your Team. 
 
 ### com.fathzer.sitessupervisor.tester.BasicHttpTester
 This tester sends http request to the specified URL and considers the result is ok if it gets a 200 status code.

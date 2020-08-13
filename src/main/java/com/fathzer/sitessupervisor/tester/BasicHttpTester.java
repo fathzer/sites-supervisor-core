@@ -1,16 +1,12 @@
 package com.fathzer.sitessupervisor.tester;
 
 import java.io.IOException;
-import java.net.InetSocketAddress;
 import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
 import org.apache.http.client.methods.HttpUriRequest;
@@ -18,9 +14,9 @@ import org.apache.http.client.methods.RequestBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fathzer.sitessupervisor.commons.ProxySettings;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -28,12 +24,8 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class BasicHttpTester extends Tester<BasicHttpTester.ServiceParams> {
-	private static final String NOT_STRING_ERR = "%s used as %s attribute is not a String";
-	private static final String PROXY_ATTRIBUTE = "proxy";
-	private static final String NO_PROXY_ATTRIBUTE = "noProxy";
-	
 	private static final Timer TIME_OUT_MANAGER = new Timer(true);
-	private final Params parameters;
+	private final ProxySettings parameters;
 	
 	@Getter
 	@EqualsAndHashCode
@@ -42,37 +34,9 @@ public class BasicHttpTester extends Tester<BasicHttpTester.ServiceParams> {
 		private Boolean useProxy;
 	}
 	
-	@Getter
-	private static class Params {
-		private DefaultProxyRoutePlanner proxy;
-		private List<String> noProxy;
-	}
-	
 	public BasicHttpTester(Map<String,Object> params) {
 		super(params);
-		this.parameters = new Params();
-		if (params!=null && params.containsKey(PROXY_ATTRIBUTE)) {
-			try {
-				String addressString = (String)params.get(PROXY_ATTRIBUTE);
-				final InetSocketAddress address = new InetSocketAddress(addressString.substring(0, addressString.lastIndexOf(':')),
-					  Integer.parseInt(addressString.substring(addressString.lastIndexOf(':')+1)));
-				if (address.isUnresolved()) {
-					throw new IllegalArgumentException(String.format("The proxy server address (%s) is unknown",address.getHostString()));
-				}
-				this.parameters.proxy = new DefaultProxyRoutePlanner(new HttpHost(address.getAddress()));
-			} catch (ClassCastException e) {
-				throw new IllegalArgumentException(String.format(NOT_STRING_ERR, params.get(PROXY_ATTRIBUTE)));
-			} catch (StringIndexOutOfBoundsException e) {
-				throw new IllegalArgumentException(String.format("%s attribute (%s) does not comply with expected format (host:port)", PROXY_ATTRIBUTE, params.get(PROXY_ATTRIBUTE)));
-			}
-			if (params.containsKey(NO_PROXY_ATTRIBUTE)) {
-				try {
-					this.parameters.noProxy = Arrays.asList(((String)params.get(NO_PROXY_ATTRIBUTE)).split(","));
-				} catch (ClassCastException e) {
-					throw new IllegalArgumentException(String.format(NOT_STRING_ERR, params.get(NO_PROXY_ATTRIBUTE)));
-				}
-			}
-		}
+		this.parameters = ProxySettings.build(params);
 	}
 
 	@Override
@@ -86,8 +50,8 @@ public class BasicHttpTester extends Tester<BasicHttpTester.ServiceParams> {
 	@Override
 	public String check(URI uri, int timeOutSeconds, ServiceParams parameters) {
 		final HttpClientBuilder builder = HttpClients.custom();
-		if (this.parameters.proxy!=null && isProxyRequired(uri, parameters)) {
-			builder.setRoutePlanner(this.parameters.proxy);
+		if (this.parameters.getProxy()!=null && isProxyRequired(uri, parameters)) {
+			builder.setRoutePlanner(this.parameters.getProxy());
 		}
 		CloseableHttpClient client = builder.build();
 		try {
@@ -127,12 +91,7 @@ public class BasicHttpTester extends Tester<BasicHttpTester.ServiceParams> {
 		if (params!=null && params.getUseProxy()!=null) {
 			return params.getUseProxy();
 		}
-		for (String suffix : this.parameters.noProxy) {
-			if (uri.getHost().endsWith(suffix)) {
-				return false;
-			}
-		}
-		return true;
+		return this.parameters.isProxyRequired(uri);
 	}
 
 	/** Builds the http request that will be tested.
