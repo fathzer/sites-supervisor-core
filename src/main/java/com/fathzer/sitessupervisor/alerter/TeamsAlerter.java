@@ -5,7 +5,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +18,6 @@ import org.apache.http.impl.client.HttpClients;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fathzer.sitessupervisor.Configuration.ServiceInfo;
 import com.fathzer.sitessupervisor.commons.ProxySettings;
@@ -34,7 +32,6 @@ public class TeamsAlerter extends Alerter<TeamsAlerter.ServiceParams> {
 	private static final String HOOK_ATTRIBUTE = "hook";
 	
 	private ProxySettings proxy;
-	private URI imageURI;
 	
 	@Getter
 	private static class TeamsMessage {
@@ -98,7 +95,6 @@ public class TeamsAlerter extends Alerter<TeamsAlerter.ServiceParams> {
 	public TeamsAlerter(Map<String, Object> parameters) {
 		super(parameters);
 		this.proxy = ProxySettings.build(parameters);
-		
 	}
 
 	@Override
@@ -106,23 +102,24 @@ public class TeamsAlerter extends Alerter<TeamsAlerter.ServiceParams> {
 		if (serviceParameters==null) {
 			throw new IllegalArgumentException("Parameters can't be null");
 		}
-		final String hook = (String) serviceParameters.get(HOOK_ATTRIBUTE);
+		final Object hook = serviceParameters.get(HOOK_ATTRIBUTE);
 		if (hook==null) {
 			throw new IllegalArgumentException("'"+HOOK_ATTRIBUTE+"' attribute is missing");
 		}
-		try {
-			return new ServiceParams(new URI(hook));
-		} catch (URISyntaxException e) {
-			throw new IllegalArgumentException(String.format("%s is not a valid hook url", hook), e);
+		if (hook instanceof String) {
+			try {
+				return new ServiceParams(new URI((String)hook));
+			} catch (URISyntaxException e) {
+				throw new IllegalArgumentException(String.format("%s is not a valid hook url", hook), e);
+			}
+		} else {
+			throw new IllegalArgumentException(String.format("%s attribute should be a string", HOOK_ATTRIBUTE));
 		}
 	}
 
 	@Override
 	public void alert(ServiceInfo info, ServiceParams config, String cause) {
 		final TeamsMessage mess = new TeamsMessage(info.getApp(), info.getEnv(), info.getUri(), cause);
-		if (this.imageURI!=null) {
-			mess.getSections().get(0).activityImage = imageURI.toString();
-		}
 		final HttpClientBuilder builder = HttpClients.custom();
 		if (this.proxy.isProxyRequired(config.webhook)) {
 			builder.setRoutePlanner(this.proxy.getProxy());
