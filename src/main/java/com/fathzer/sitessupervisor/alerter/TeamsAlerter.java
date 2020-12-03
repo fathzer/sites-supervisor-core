@@ -135,7 +135,7 @@ public class TeamsAlerter extends Alerter<TeamsAlerter.ServiceParams> {
 				throw new IOException("Status code is "+code);
 			}
 		} catch (IOException e) {
-			log.trace(String.format("Error while posting Teams message for %s %s to %s",info.getApp(), info.getEnv(), config.webhook), e);
+			log.error(String.format("Error while posting Teams message for %s %s to %s",info.getApp(), info.getEnv(), config.webhook), e);
 		} finally {
 			try {
 				client.close();

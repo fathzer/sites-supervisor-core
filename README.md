@@ -183,7 +183,8 @@ Here are the global parameters:
 
 Here are the application specific parameters:
 * **headers**: A map of headers to add to the http request. Keys are the headers name, value are the headers value. See [Supervised application configuration](#supervised-application-configuration) to have an example.
-* **useProxy**: Set the proxy usage (optional). This settings overrides the global one. This means if the url matches one of the excluded suffixes declared in the global configuration, but this attribute is true, the proxy will be used. Same thing if set to false and url not matches any suffix.
+* **useProxy**: Sets the proxy usage (optional). This settings overrides the global one. This means if the url matches one of the excluded suffixes declared in the global configuration, but this attribute is true, the proxy will be used. Same thing if set to false and url not matches any suffix.
+* **sslCheck**: Sets the ssl verification (optional). Set this to false to deactivate ssl verification on https uri. As it is clearly a security home, this is not recommended, but it can save hours if you want to test URL with untrusted certificate.
 
 Please note this class can be easily subclassed to change its behavior. The *verify* method can be overridden to accept more parameters and *buildRequest* and *isValid* methods can then have other behavior (let say, use POST instead of GET and accept 201 instead of 200).
 

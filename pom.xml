@@ -8,7 +8,7 @@
 		<version>1.0.3</version>
 	</parent>
 	<artifactId>sites-supervisor-core</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.6</version>
 	<name>sites-supervisor-core</name>
 	<url>https://github.com/fathzer/sites-supervisor-core</url>
 	<scm>
@@ -117,7 +117,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.13</version>
+			<version>4.13.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
