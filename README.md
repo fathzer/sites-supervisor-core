@@ -26,7 +26,7 @@ It is released as a Maven artifact. Add this to your pom.
 <dependency>
 	<groupId>com.fathzer</groupId>
 	<artifactId>sites-supervisor-core</artifactId>
-	<version>0.0.5</version>
+	<version>0.0.6</version>
 </dependency>
 ```
 
