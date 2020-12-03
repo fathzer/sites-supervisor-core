@@ -58,7 +58,6 @@ public class BasicHttpTester extends Tester<BasicHttpTester.ServiceParams> {
 
 	@Override
 	public String check(URI uri, int timeOutSeconds, ServiceParams parameters) {
-		System.out.println(uri+": SSL check set to " + (parameters == null ? true : parameters.isSslCheck())); // TODO
 		final HttpClientBuilder builder = HttpClients.custom();
 		if (this.parameters.getProxy() != null && isProxyRequired(uri, parameters)) {
 			builder.setRoutePlanner(this.parameters.getProxy());
