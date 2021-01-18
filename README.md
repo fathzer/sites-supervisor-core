@@ -11,11 +11,12 @@ It allows you to test a bunch of applications, be informed of the failures and s
    1. [Supervised application configuration](#supervised-application-configuration)
 1. [Components documentation](#components-documentation)
    1. [com.fathzer.sitessupervisor.db.Influx](#comfathzersitessupervisordbinflux)
+   1. [com.fathzer.sitessupervisor.alerter.LogAlerter](#comfathzersitessupervisoralerterlogalerter)
    1. [com.fathzer.sitessupervisor.alerter.EMailAlerter](#comfathzersitessupervisoralerteremailalerter)
    1. [com.fathzer.sitessupervisor.alerter.TeamsAlerter](#comfathzersitessupervisoralerterteamsalerter)
    1. [com.fathzer.sitessupervisor.tester.BasicHttpTester](#comfathzersitessupervisortesterbasichttptester)
    1. [com.fathzer.sites.supervisor.SupervisorCommand](#comfathzersitessupervisorsupervisorcommand)
-1. [Writing your own database connectorsn testers and alerters](#writing-your-own-database-connectors-testers-and-alerters)
+1. [Writing your own database connectors, testers and alerters](#writing-your-own-database-connectors-testers-and-alerters)
 1. [Logging](#logging)
 
 ## Requirements and installation
@@ -151,6 +152,12 @@ The data is stored in 2 series:
   * tags **url**, **app**, **env** that contain the values specified in the application configuration.
   * field **up** that contains 1 if the new application status is up, 0 if it is down. 
   * field **message** that contains the failure cause if the new status is down.
+
+### com.fathzer.sitessupervisor.alerter.LogAlerter
+The most basic alerter ever ;-)  
+It simply logs the alerts in the program logs using the com.fathzer.sitesuspervisor.alerter.LogAlerter logger.  
+The service down event is logged with *warn* level, and with *info* level when it become up again.  
+It accepts no global nor application parameter.
 
 ### com.fathzer.sitessupervisor.alerter.EMailAlerter
 As its name lets suppose, this alerter sends email to addresses to inform of status changes.
