@@ -8,7 +8,7 @@
 		<version>1.0.3</version>
 	</parent>
 	<artifactId>sites-supervisor-core</artifactId>
-	<version>0.0.6</version>
+	<version>0.0.7</version>
 	<name>sites-supervisor-core</name>
 	<url>https://github.com/fathzer/sites-supervisor-core</url>
 	<scm>

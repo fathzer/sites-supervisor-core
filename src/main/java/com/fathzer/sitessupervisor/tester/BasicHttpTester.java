@@ -65,8 +65,7 @@ public class BasicHttpTester extends Tester<BasicHttpTester.ServiceParams> {
 		if (parameters != null && !parameters.isSslCheck()) {
 			deactivateSSLCheck(builder);
 		}
-		CloseableHttpClient client = builder.build();
-		try {
+		try (CloseableHttpClient client = builder.build()) {
 			final HttpUriRequest req = buildRequest(uri, parameters);
 			final AtomicBoolean timedOut = new AtomicBoolean();
 			final TimerTask task = new TimerTask() {
@@ -79,23 +78,15 @@ public class BasicHttpTester extends Tester<BasicHttpTester.ServiceParams> {
 				}
 			};
 			TIME_OUT_MANAGER.schedule(task, timeOutSeconds * 1000L);
-			try {
-				HttpResponse response = client.execute(req);
-				task.cancel();
-				if (timedOut.get()) {
-					return "Timed out";
-				}
-				return isValid(response);
-			} catch (IOException e) {
-				log.trace("Error while testing URL", e);
-				return e.getMessage();
+			HttpResponse response = client.execute(req);
+			task.cancel();
+			if (timedOut.get()) {
+				return "Timed out";
 			}
-		} finally {
-			try {
-				client.close();
-			} catch (IOException e) {
-				log.warn("Error while closing http client", e);
-			}
+			return isValid(response);
+		} catch (IOException e) {
+			log.trace("Error while testing URL", e);
+			return e.getMessage();
 		}
 	}
 
