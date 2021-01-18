@@ -32,7 +32,7 @@ public class ProxySettings {
 				if (address.isUnresolved()) {
 					throw new IllegalArgumentException(String.format("The proxy server address (%s) is unknown",address.getHostString()));
 				}
-				result.setProxy(new DefaultProxyRoutePlanner(new HttpHost(address.getAddress())));
+				result.setProxy(new DefaultProxyRoutePlanner(new HttpHost(address.getAddress(),address.getPort())));
 			} catch (ClassCastException e) {
 				throw new IllegalArgumentException(String.format(NOT_STRING_ERR, params.get(PROXY_ATTRIBUTE)));
 			} catch (StringIndexOutOfBoundsException e) {
