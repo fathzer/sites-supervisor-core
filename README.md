@@ -8,7 +8,7 @@ It allows you to test a bunch of applications, be informed of the failures and s
 1. [Main concepts](#main-concepts)
 1. [Configuration](#configuration)
    1. [Global configuration](#global-configuration)
-   1. [Supervised application configuration](#supervised-application-configuration)
+   1. [Supervised applications configuration](#supervised-applications-configuration)
 1. [Components documentation](#components-documentation)
    1. [com.fathzer.sitessupervisor.db.Influx](#comfathzersitessupervisordbinflux)
    1. [com.fathzer.sitessupervisor.alerter.LogAlerter](#comfathzersitessupervisoralerterlogalerter)
@@ -49,7 +49,7 @@ This library includes the following implementation of these concepts:
 * **Supervisor**:
   * **com.fathzer.sitessupervisor.Supervisor**: A supervisor that manages the full life cycle of the supervision.
   
-This package also provides **com.fathzer.sitessupervisor.parsing.JSONParser** that allows you to parse configuration files in JSON format, and **com.fathzer.sitessupervisor.SupervisorCommand**, a runnable class that parses JSON configuration files, then instantiate and run a Supervisor.
+This package also provides **com.fathzer.sitessupervisor.parsing.JSONParser** that allows you to parse configuration files in JSON format, and **com.fathzer.sitessupervisor.SupervisorCommand**, a runnable class that parses JSON configuration files, then instantiates and runs a Supervisor.
 
 ## Configuration
 The configuration of a supervisor is divided in two parts:
@@ -89,10 +89,10 @@ Here is a configuration example:
 
 The important things to understand are:
 * All the components are identified by their class name.
-* All the components have a *parameters* attribute that contains the configuration of the component. The exact content of this attribute (and its obligatory presence) depends on the component (see component documentation).
-* alerters and testers have unique names (here *mail* and *http200*) that will be used to identified them in supervised application configuration configuration file.
+* All the components have a *parameters* attribute that contains the configuration of the component. The exact content of this attribute (and its obligatory presence) depends on the component (see component's documentation).
+* alerters and testers have unique names (here *mail* and *http200*) that will be used to identified them in supervised applications configuration file.
 
-### Supervised application configuration
+### Supervised applications configuration
 Here is a configuration example:
 ```json
 {
@@ -131,7 +131,7 @@ The important things to understand are:
   * frequencyMinutes sets the test frequency. Default value is 5 minutes.
   * timeOutSeconds is the maximum time allowed to the test to reply. If no reply is obtained in the specified time, service is considered down. Default value is 30s.
 * A service should have a *tester* attribute and can have no *alerters*. Alerters and tester and identified by the name declared in [**global configuration**](#global-configuration).
-* All the components have a *parameters* attribute that contains the configuration of the component for the service. The exact content of this attribute (and its obligatory presence) depends on the component (see component documentation).
+* All the components have a *parameters* attribute that contains the configuration of the component for the service. The exact content of this attribute (and its obligatory presence) depends on the component (see component's documentation).
 
 ## Components documentation
 ### com.fathzer.sitessupervisor.db.Influx
@@ -189,7 +189,7 @@ Here are the global parameters:
 * **noProxy**: A list of host name suffixes (optional). For example, if the suffix *.example.com* is in the list, 'mysite.example.com' will be accessed without proxy.
 
 Here are the application specific parameters:
-* **headers**: A map of headers to add to the http request. Keys are the headers name, value are the headers value. See [Supervised application configuration](#supervised-application-configuration) to have an example.
+* **headers**: A map of headers to add to the http request. Keys are the headers name, value are the headers value. See [Supervised application configuration](#supervised-applications-configuration) to have an example.
 * **useProxy**: Sets the proxy usage (optional). This settings overrides the global one. This means if the url matches one of the excluded suffixes declared in the global configuration, but this attribute is true, the proxy will be used. Same thing if set to false and url not matches any suffix.
 * **sslCheck**: Sets the ssl verification (optional). Set this to false to deactivate ssl verification on https uri. As it is clearly a security home, this is not recommended, but it can save hours if you want to test URL with untrusted certificate.
 

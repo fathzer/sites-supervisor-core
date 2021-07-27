@@ -28,7 +28,7 @@ public abstract class Tester<T> {
 	 * Tests whether the site is up or not
 	 * @param uri The uri to test
 	 * @param timeoutSeconds The test timeOut in seconds.
-	 * <br>Note: it's the responsibility of this tester to guaranty the timeout is respected at the method return a non null result if the timeout is reached
+	 * <br>Note: it's the responsibility of this tester to guaranty the timeout is respected and the method returns a non null result if the timeout is reached
 	 * @param parameters The test's parameters (could be null)
 	 * @return null if the site is up, a cause if the site replied an unexpected answer or the connection reached the timeOut
 	 */
